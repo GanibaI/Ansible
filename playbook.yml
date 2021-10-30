@@ -1,0 +1,23 @@
+---
+- name: test
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: install nginx
+    apt: name=nginx state=latest
+
+  - name: proverka nginx
+    service: name=nginx state=started enabled=yes
+
+  - name: Open port 80
+    ufw:
+      rule: allow
+      port: '80'
+      proto: tcp
+
+  - name: create directory
+    file: path=/var/www/html/ state=directory mode=0755
+
+  - name: copy index.html
+    copy: src=/home/alex/ansible/index.html dest=/var/www/html/index.html
